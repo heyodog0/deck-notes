@@ -1,0 +1,22 @@
+rules_version = '2';
+// Sticky/text notes for the deck archive.
+//
+// WRITE = any signed-in account (no email list to maintain). Pair this with the
+// site password (middleware.js) and the unlisted/noindex URLs as the practical
+// barrier. READ is open so anyone with the link can view notes.
+//
+// If you ever want lighter-touch gating WITHOUT a per-person list, restrict by
+// email domain instead (see the commented line).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /notes/{noteId} {
+      allow read: if true;
+
+      allow write: if request.auth != null;
+
+      // domain-only alternative (no list, but limits to one org):
+      // allow write: if request.auth != null
+      //   && request.auth.token.email.matches('.*@example[.]edu');
+    }
+  }
+}

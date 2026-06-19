@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>My Deck</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css">
+<style>
+  .reveal { font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+            font-size: 34px; color: #111; }
+  .reveal .slides { text-align: left; }
+  .reveal h1, .reveal h2 { letter-spacing: -0.01em; }
+  .reveal .fig img { max-width: 1120px; max-height: 620px; display: block; margin: 0 auto;
+                     border: 1px solid #ddd; border-radius: 4px; }
+  .reveal .pixel { image-rendering: pixelated; }   /* for tiny upscaled frames */
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <section class="title-slide">
+    <h1>My Deck</h1>
+    <p>subtitle &middot; date</p>
+  </section>
+
+  <section>
+    <h2>A point</h2>
+    <ul><li>bullet</li><li>bullet</li></ul>
+  </section>
+
+  <section>
+    <h2>A figure</h2>
+    <!-- assets live in slides/figs/ and are referenced as figs/... -->
+    <div class="fig"><img src="figs/example.png" alt="example"></div>
+  </section>
+
+</div></div>
+
+<!-- deck-notes injects the notes shell + keyboard config into this initialize() -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({ hash: true, center: false, controls: true, progress: true,
+    slideNumber: 'c/t', transition: 'none', width: 1280, height: 800, margin: 0.04 });
+</script>
+</body>
+</html>
