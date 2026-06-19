@@ -48,6 +48,30 @@ password from `SITE_PASSWORD`). Pages are `noindex`.
 
 ---
 
+## Hub of hubs — one gated site for many projects
+
+Instead of a Vercel project per repo, aggregate every project's decks into ONE
+gated site with `hub.mjs`. Make a `hub.config.json`:
+
+```json
+{
+  "title": "ryan · decks",
+  "notesConfig": "../analogen/notes-config.js",
+  "projects": [
+    { "name": "analogen", "title": "analogen",
+      "slides": "../analogen/outputs/slides", "figs": "../analogen/outputs/figs" }
+  ]
+}
+```
+```bash
+node <deck-notes>/hub.mjs        # -> dist/pages/  (paths resolve from the config file)
+node <deck-notes>/serve.mjs      # preview
+```
+Output: `/` lists projects, `/<project>/` lists that project's decks, `/<project>/<slug>`
+is each deck. One shared Firebase; notes are namespaced `<project>/<slug>`. Add a
+project = one line in `hub.config.json`. Deploy the single `dist/pages` to one
+Vercel project; point a subdomain (e.g. `decks.you.com`) at it.
+
 ## Cloud notes (Firebase) — optional
 
 If `notes-config.js` exists at the project root, notes are enabled. Web config is
