@@ -152,8 +152,10 @@ export function injectShell(html, { deckId, notesEnabled, homeHref = '/' }) {
   return html;
 }
 
-// Copy figs/... assets a deck references into outFigsDir; rewrite ../figs/ -> figs/.
-export function processDeckAssets(html, figsSrcDir, outFigsDir, seen, label) {
+// Copy figs/... assets a deck references into outFigsDir, then rewrite refs to
+// ABSOLUTE `${basePath}/figs/...` so they survive Vercel's trailing-slash URLs
+// (a relative figs/ would resolve against /<proj>/<deck>/ and 404).
+export function processDeckAssets(html, figsSrcDir, outFigsDir, seen, label, basePath = '') {
   const refs = [...html.matchAll(/(?:src|data-sprite)="(?:\.\.\/)?figs\/([^"]+)"/g)].map(m => m[1]);
   for (const rel of [...new Set(refs)]) {
     const srcPath = join(figsSrcDir, rel);
@@ -165,7 +167,8 @@ export function processDeckAssets(html, figsSrcDir, outFigsDir, seen, label) {
       seen.add(srcPath);
     }
   }
-  return { html: html.replace(/\.\.\/figs\//g, 'figs/'), nRefs: new Set(refs).size };
+  const out = html.replace(/((?:src|data-sprite)=")(?:\.\.\/)?figs\//g, `$1${basePath}/figs/`);
+  return { html: out, nRefs: new Set(refs).size };
 }
 
 // Minimal list page (used for the deck hub and per-project sub-hubs).
@@ -227,7 +230,7 @@ export function copyNotes(frameworkSrc, OUT, notesConfigPath) {
 export function writeVercelAndMiddleware(OUT, title) {
   const vercelJson = {
     $schema: 'https://openapi.vercel.sh/vercel.json', framework: null,
-    trailingSlash: true, cleanUrls: true,
+    trailingSlash: false, cleanUrls: true,
     headers: [{ source: '/(.*)', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive, nosnippet' }] }],
   };
   writeFileSync(join(OUT, 'vercel.json'), JSON.stringify(vercelJson, null, 2));

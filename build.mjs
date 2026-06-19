@@ -38,12 +38,12 @@ for (const d of DECKS) {
   const p = join(SLIDES, d.src);
   if (!existsSync(p)) { console.error(`MISSING deck: ${p}`); process.exit(1); }
   let html = readFileSync(p, 'utf8');
-  ({ html } = processDeckAssets(html, FIGS, join(OUT, 'figs'), seen, d.src));
+  ({ html } = processDeckAssets(html, FIGS, join(OUT, 'figs'), seen, d.src, ''));
   html = injectShell(html, { deckId: d.slug, notesEnabled, homeHref: '/' });
   writeFileSync(join(OUT, `${d.slug}.html`), html);
   console.log(`  ${d.src} -> ${d.slug}.html`);
 }
-writeFileSync(join(OUT, 'index.html'), listPage(TITLE, DECKS.map(d => ({ href: d.slug, label: d.title, date: d.date }))));
+writeFileSync(join(OUT, 'index.html'), listPage(TITLE, DECKS.map(d => ({ href: `/${d.slug}`, label: d.title, date: d.date }))));
 writeVercelAndMiddleware(OUT, TITLE);
 console.log(`Built ${OUT}  (${DECKS.length} decks)`);
 console.log(`Deploy: vercel --prod --yes --cwd dist/pages  (set SITE_PASSWORD)`);

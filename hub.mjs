@@ -45,13 +45,13 @@ for (const proj of cfg.projects) {
     const p = join(slides, d.src);
     if (!existsSync(p)) { console.error(`MISSING deck: ${p}`); process.exit(1); }
     let html = readFileSync(p, 'utf8');
-    ({ html } = processDeckAssets(html, figs, join(projOut, 'figs'), seen, `${proj.name}/${d.src}`));
+    ({ html } = processDeckAssets(html, figs, join(projOut, 'figs'), seen, `${proj.name}/${d.src}`, `/${proj.name}`));
     html = injectShell(html, { deckId: `${proj.name}/${d.slug}`, notesEnabled, homeHref: `/${proj.name}/` });
     writeFileSync(join(projOut, `${d.slug}.html`), html);
   }
   writeFileSync(join(projOut, 'index.html'),
-    listPage(proj.title || proj.name, decks.map(d => ({ href: d.slug, label: d.title, date: d.date }))));
-  projItems.push({ href: `${proj.name}/`, label: proj.title || proj.name, date: `${decks.length} deck${decks.length === 1 ? '' : 's'}` });
+    listPage(proj.title || proj.name, decks.map(d => ({ href: `/${proj.name}/${d.slug}`, label: d.title, date: d.date }))));
+  projItems.push({ href: `/${proj.name}/`, label: proj.title || proj.name, date: `${decks.length} deck${decks.length === 1 ? '' : 's'}` });
   console.log(`  ${proj.name}: ${decks.length} decks`);
 }
 writeFileSync(join(OUT, 'index.html'), listPage(TITLE, projItems));
