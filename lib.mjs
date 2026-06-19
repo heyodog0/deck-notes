@@ -237,7 +237,7 @@ export const config = { matcher: '/:path*' };
 const REALM = ${JSON.stringify(title)};
 const USERNAME = 'archive';
 export default function middleware(req) {
-  const password = process.env.SITE_PASSWORD || 'changeme123';
+  const password = process.env.SITE_PASSWORD || 'grasshopper123';
   const auth = req.headers.get('authorization');
   if (auth && auth.startsWith('Basic ')) {
     try {
