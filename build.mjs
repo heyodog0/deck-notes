@@ -270,17 +270,10 @@ for (const deck of DECKS) {
   console.log(`  ${deck.src} -> ${deck.slug}.html  (${new Set(refs).size} refs)`);
 }
 
-// --- archive hub (index.html) ---
-const cards = DECKS.map(d => {
-  const badge = d.status === 'current'
-    ? '<span class="badge current">current</span>'
-    : '<span class="badge">archived</span>';
-  return `      <a class="card" href="${d.slug}">
-        <div class="card-head"><span class="card-title">${d.title}</span>${badge}</div>
-        <div class="card-date">${d.date}</div>
-        <div class="card-summary">${d.summary}</div>
-      </a>`;
-}).join('\n');
+// --- archive hub (index.html): a minimal list of decks (title + date) ---
+const items = DECKS.map(d =>
+  `      <li><a href="${d.slug}">${d.title}</a><span class="date">${d.date}</span></li>`
+).join('\n');
 
 const hub = `<!DOCTYPE html>
 <html lang="en">
@@ -290,43 +283,30 @@ const hub = `<!DOCTYPE html>
 <title>${ARCHIVE_TITLE}</title>
 <style>
   :root {
-    --fg: #111; --muted: #666; --accent: #0a52a1; --ok: #1a6b3a;
+    --fg: #111; --muted: #999; --accent: #0a52a1;
     --body-font: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
     --mono-font: "SFMono-Regular", Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; }
-  body { background: #fafafa; color: var(--fg); font-family: var(--body-font);
-         margin: 0; padding: 8vh 6vw; }
-  .wrap { max-width: 880px; margin: 0 auto; }
-  h1 { font-size: 2.2em; letter-spacing: -0.02em; margin: 0 0 0.15em; }
-  .lede { color: var(--muted); font-size: 1.05em; margin: 0 0 2.2em; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
-  .card { display: block; text-decoration: none; color: inherit;
-          background: #fff; border: 1px solid #e3e3e3; border-radius: 10px;
-          padding: 20px 22px; transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s; }
-  .card:hover { border-color: #b9c7d8; transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0,0,0,0.07); }
-  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  .card-title { font-size: 1.25em; font-weight: 700; letter-spacing: -0.01em; }
-  .card-date { font-family: var(--mono-font); font-size: 0.78em; color: var(--muted); margin-top: 2px; }
-  .card-summary { margin-top: 10px; line-height: 1.45; color: #333; font-size: 0.96em; }
-  .badge { font-family: var(--mono-font); font-size: 0.66em; text-transform: uppercase;
-           letter-spacing: 0.07em; color: var(--muted); background: #f0f0f0;
-           padding: 3px 7px; border-radius: 20px; }
-  .badge.current { color: #fff; background: var(--ok); }
-  footer { color: #aaa; font-size: 0.8em; margin-top: 3em; font-family: var(--mono-font); }
+  body { background: #fff; color: var(--fg); font-family: var(--body-font);
+         margin: 0; padding: 12vh 7vw; }
+  .wrap { max-width: 560px; margin: 0 auto; }
+  h1 { font-size: 1.6em; letter-spacing: -0.01em; margin: 0 0 1.4em; font-weight: 700; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+       padding: 13px 0; border-top: 1px solid #eee; }
+  li:last-child { border-bottom: 1px solid #eee; }
+  li a { color: var(--fg); text-decoration: none; font-size: 1.05em; }
+  li a:hover { color: var(--accent); }
+  .date { font-family: var(--mono-font); font-size: 0.8em; color: var(--muted); white-space: nowrap; }
 </style>
 </head>
 <body>
   <div class="wrap">
     <h1>${ARCHIVE_TITLE}</h1>
-    <p class="lede">Open a deck, then press <b>N</b> for notes mode &mdash; drop
-       sticky (<b>a</b>) and text (<b>t</b>) notes right onto the slides.</p>
-    <div class="grid">
-${cards}
-    </div>
-    <footer>${DECKS.length} decks &middot; static archive &middot; noindex</footer>
+    <ul>
+${items}
+    </ul>
   </div>
 </body>
 </html>
